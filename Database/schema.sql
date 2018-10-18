@@ -1,2 +1,6 @@
-
-CREATE TABLE Apps (appName text, url text, port int, container text)
+CREATE TABLE Apps (
+  appName   text,
+  url       text,
+  port      int,
+  container text
+)
