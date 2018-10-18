@@ -93,3 +93,5 @@ appengine_config.py
 # Virtual environment
 venv/
 
+# Database
+*.db
