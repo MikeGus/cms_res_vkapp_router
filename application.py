@@ -1,5 +1,5 @@
 class Application:
 
-    def __init__(self, name, address):
+    def __init__(self, name, url):
         self.name = name
-        self.address = address
+        self.url = url

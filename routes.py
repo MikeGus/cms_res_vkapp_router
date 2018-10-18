@@ -1,15 +1,19 @@
-from flask import Flask
+from flask import Flask, abort
+from requests import get
 
 app = Flask(__name__)
 
-
-@app.route('/')
-def put_app(app_name):
-    #put app in base
-    return app_name, 200
+inMemoryDb = {}  # add read from database
 
 
 @app.route('/<app_name>')
 def proxy(app_name):
-    #get app from base
-    return app_name
+    url = inMemoryDb.get(app_name)
+
+    if url:
+        response = get(url, stream=True)
+        return (response.text,
+                response.status_code,
+                response.headers.items())
+
+    abort(404)
