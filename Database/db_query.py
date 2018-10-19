@@ -1,4 +1,4 @@
-from Database.db_connection import get_db
+from appconfig import get_db
 
 
 def get_info_app(appName):

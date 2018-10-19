@@ -1,7 +1,7 @@
-from flask import Flask, abort
+from flask import abort
 from requests import get
+from appconfig import app
 
-app = Flask(__name__)
 
 inMemoryDb = {}  # add read from database
 
