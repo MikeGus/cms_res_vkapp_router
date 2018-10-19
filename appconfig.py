@@ -35,6 +35,7 @@ def get_port():
     else:
         _app_ctx_stack.top._lastport = port + 1
         return port + 1 
+    return port
 
 def get_last_port_for_url(url):
     with app.app_context():

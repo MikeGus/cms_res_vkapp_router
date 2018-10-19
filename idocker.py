@@ -8,7 +8,7 @@ from appconfig import app, get_port, lock
 def start_new_docker(appName):
     with app.app_context():
         client = docker.from_env()
-        str_env = "APP_Name=" + appName
+        str_env = "APP_NAME=" + appName
         port = get_port()
         container = client.containers.run('vktestapp', ports={'8080/tcp': port},
                     detach=True, environment=[str_env])
@@ -23,7 +23,7 @@ def restart_docker(appName, containerId):
             return 0
         #if container remove, but exist in database
         except Exception:
-            str_env = "APP_Name=" + appName
+            str_env = "APP_NAME=" + appName
             port = get_port()
             container = client.containers.run('vktestapp', ports={'8080/tcp': port},
                         detach=True, environment=[str_env])
