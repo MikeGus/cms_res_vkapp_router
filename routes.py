@@ -9,12 +9,28 @@ from Database.dbquery import get_info_app, set_info_app, update_info_app
 
 
 @app.route('/<app_name>')
-def proxy(app_name):
+def redirect(app_name):
     #url = inMemoryDb.get(app_name)
     infoApp = get_info_app(app_name) 
 
     if infoApp:
         url = infoApp[1] + ":" + str(infoApp[2])
+        print(url)
+        response = get(url, stream=True)
+        return (response.text,
+                response.status_code,
+                response.headers.items())
+
+    abort(404)
+
+@app.route('/<app_name>/<path:subpath>')
+def proxy(app_name, subpath):
+    #url = inMemoryDb.get(app_name)
+    infoApp = get_info_app(app_name) 
+
+    if infoApp:
+        url = infoApp[1] + ":" + str(infoApp[2]) + '/' + app_name + '/' + subpath
+        print(url)
         response = get(url, stream=True)
         return (response.text,
                 response.status_code,
