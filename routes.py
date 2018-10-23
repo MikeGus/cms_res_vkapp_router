@@ -51,8 +51,6 @@ def deploy():
         port, container_id = start_new_docker(app_name)
         set_info_app(app_name, url_host, port, container_id)
     else:
-        res = restart_docker(app_name, info_app[3])
-        if res != 0:
-            port, container_id = res
-            update_info_app(app_name, url_host, port, container_id)
+        port, container_id = restart_docker(app_name, info_app[3], info_app[2])
+        update_info_app(app_name, url_host, port, container_id)
     return "OK", 200
