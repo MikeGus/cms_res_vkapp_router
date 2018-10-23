@@ -11,10 +11,10 @@ from Database.dbquery import get_info_app, set_info_app, update_info_app
 @app.route('/<app_name>')
 def redirect(app_name):
     #url = inMemoryDb.get(app_name)
-    infoApp = get_info_app(app_name) 
+    info_app = get_info_app(app_name) 
 
-    if infoApp:
-        url = infoApp[1] + ":" + str(infoApp[2])
+    if info_app:
+        url = info_app[1] + ":" + str(info_app[2])
         print(url)
         response = get(url, stream=True)
         return (response.text,
@@ -26,10 +26,10 @@ def redirect(app_name):
 @app.route('/<app_name>/<path:subpath>')
 def proxy(app_name, subpath):
     #url = inMemoryDb.get(app_name)
-    infoApp = get_info_app(app_name) 
+    info_app = get_info_app(app_name) 
 
-    if infoApp:
-        url = infoApp[1] + ":" + str(infoApp[2]) + '/' + app_name + '/' + subpath
+    if info_app:
+        url = info_app[1] + ":" + str(info_app[2]) + '/' + app_name + '/' + subpath
         print(url)
         response = get(url, stream=True)
         return (response.text,
@@ -43,16 +43,16 @@ def deploy():
     data = request.get_json()
     if data is None:
         abort(400)
-    appName = data["appName"]
-    if appName is None:
+    app_name = data["appName"]
+    if app_name is None:
         abort(404)
-    infoApp = get_info_app(appName)
-    if infoApp is None:
-        port, containerId = start_new_docker(appName)
-        set_info_app(appName, url_host, port, containerId)
+    info_app = get_info_app(app_name)
+    if info_app is None:
+        port, container_id = start_new_docker(app_name)
+        set_info_app(app_name, url_host, port, container_id)
     else:
-        res = restart_docker(appName, infoApp[3])
+        res = restart_docker(app_name, info_app[3])
         if res != 0:
-            port, containerId = res
-            update_info_app(appName, url_host, port, containerId)
+            port, container_id = res
+            update_info_app(app_name, url_host, port, container_id)
     return "OK", 200
