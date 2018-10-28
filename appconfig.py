@@ -1,14 +1,22 @@
 import sqlite3
 import threading
 from flask import _app_ctx_stack, Flask
+from enum import Enum
 
 app = Flask(__name__)
 
+class AppsState(Enum):
+    STOPPED = 1
+    STARTED = 2
+    STARTS = 3
 
 DATABASE = 'Database/Apps.db'
 
 url_host = "http://localhost"
 start_port = 4000
+
+server_key_global = None
+apps_state = {}
 
 lock = threading.Lock()
 
@@ -17,6 +25,14 @@ def get_db():
     if db is None:
         db = _app_ctx_stack.top._database = sqlite3.connect(DATABASE)
     return db
+
+def get_server_key():
+    global server_key_global
+    if server_key_global is None:
+        f = open('server_key', 'r')
+        server_key_global = f.read()
+        f.close()
+    return server_key_global
 
 
 @app.teardown_appcontext

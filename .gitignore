@@ -95,3 +95,6 @@ venv/
 
 # Database
 *.db
+
+#server_key
+server_key
