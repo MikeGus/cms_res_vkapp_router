@@ -76,16 +76,5 @@ def deploy():
     else:
         port, container_id = restart_docker(app_name, info_app[3], info_app[2])
         update_info_app(app_name, url_host, port, container_id)
-    return "OK", 200
-
-
-@app.route('/appsStarted', methods=['GET'])
-def apps_started():
-    server_key = request.args['server_key']
-    app_name = request.args['app_name']
-    if (server_key or app_name) is None:
-        abort(400)
-    if server_key != get_server_key():
-        abort (403)
     apps_state[app_name] = AppsState.STARTED
     return "OK", 200
