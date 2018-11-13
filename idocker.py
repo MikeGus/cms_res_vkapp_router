@@ -30,3 +30,13 @@ def restart_docker(app_name, container_id, port):
         container = client.containers.run('vktestapp', ports={'8080/tcp': port},
                     detach=True, environment=[str_env, server_key_env])
         return port, container.id
+
+def remove_docker(container_id):
+    with app.app_context():
+        client = docker.from_env()
+        try:
+            container = client.containers.get(container_id)
+            container.stop()
+            container.remove()
+        except docker.errors.APIError:
+            pass

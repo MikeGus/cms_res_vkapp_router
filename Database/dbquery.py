@@ -24,3 +24,16 @@ def update_info_app(app_name, url, port, container):
         cursor.execute(sql, [url, container, port, app_name])
         get_db().commit()
 
+def get_all_apps():
+    with app.app_context():
+        cursor = get_db().cursor()
+        sql = "SELECT * FROM Apps "
+        cursor.execute(sql)
+        return cursor.fetchall() 
+
+def delete_app(app_name):
+    with app.app_context():
+        cursor = get_db().cursor()
+        sql = "DELETE FROM Apps WHERE appName=?"
+        cursor.execute(sql, [app_name])
+        get_db().commit()
