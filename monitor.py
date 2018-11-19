@@ -6,7 +6,7 @@ from time import sleep
 
 error_counter = 3
 restart_counter = 3
-url_back = "https://cmsvkapp.herokuapp.com/api/apps/"
+url_back = "https://cmsvkappback.site/api/apps/"
 #app_name : [error_counter, restart_counter, port, conteiner]
 problem_apps = {}
         
