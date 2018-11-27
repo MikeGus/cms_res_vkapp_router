@@ -1,7 +1,7 @@
 import json
 import os
-from flask import abort, request
-from requests import get
+from flask import abort, request, render_template
+from requests import get, exceptions
 from appconfig import app, url_host, apps_state, AppsState, get_server_key
 from idocker import start_new_docker, restart_docker
 from Database.dbquery import get_info_app, set_info_app, update_info_app
@@ -22,12 +22,13 @@ def redirect(app_name):
         if state == AppsState.STARTS:
             return "Apps starts", 200
         url = info_app[1] + ":" + str(info_app[2])
-        response = get(url, stream=True)
-        if response.status_code == 500:
-            return render_template('deploy.error.html')
-        return (response.text,
-                response.status_code,
-                response.headers.items())
+        try:
+           response = get(url, stream=True)
+           return (response.text,
+                    response.status_code,
+                    response.headers.items())
+        except exceptions.RequestException:
+           return render_template('deploy.error.html')
 
     abort(404)
 
@@ -45,10 +46,14 @@ def proxy(app_name, subpath):
             return "Apps starts", 200
         url = info_app[1] + ":" + str(info_app[2]) + '/' + app_name + '/' + subpath
         print(url)
-        response = get(url, stream=True)
-        return (response.text,
-                response.status_code,
-                response.headers.items())
+        try:
+           response = get(url, stream=True)
+           return (response.text,
+                    response.status_code,
+                    response.headers.items())
+        except exceptions.RequestException:
+           return render_template('deploy.error.html')
+
 
     abort(404)
 
@@ -62,8 +67,6 @@ def deploy():
         server_key = data["serverKey"]
     except KeyError:
         abort(404)
-    print(server_key)
-    print(get_server_key())
     if server_key != get_server_key():
         abort (403)
     info_app = get_info_app(app_name)
