@@ -23,6 +23,8 @@ def redirect(app_name):
             return "Apps starts", 200
         url = info_app[1] + ":" + str(info_app[2])
         response = get(url, stream=True)
+        if response.status_code == 500:
+            return render_template('deploy.error.html')
         return (response.text,
                 response.status_code,
                 response.headers.items())
