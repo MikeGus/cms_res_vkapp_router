@@ -32,6 +32,7 @@ def get_server_key():
     if server_key_global is None:
         f = open('server_key', 'r')
         server_key_global = f.read()
+        server_key_global = server_key_global[0:-1]
         f.close()
     return server_key_global
 

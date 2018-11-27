@@ -60,6 +60,8 @@ def deploy():
         server_key = data["serverKey"]
     except KeyError:
         abort(404)
+    print(server_key)
+    print(get_server_key())
     if server_key != get_server_key():
         abort (403)
     info_app = get_info_app(app_name)
