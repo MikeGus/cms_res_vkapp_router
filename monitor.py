@@ -25,15 +25,8 @@ def find_problem_apps(apps):
         url = info_app[1] + ":" + str(info_app[2])
         try:
             response = head(url)
-            if response.status_code == 500:
-                try:
-                    #incriment error
-                    problem_apps[info_app[0]][0] += 1 
-                except KeyError:
-                    problem_apps[info_app[0]] = [1, 0, info_app[2], info_app[3]]
-            else:
-                problem_apps.pop(info_app[0], None)
-        except exceptions.ConnectionError:
+            problem_apps.pop(info_app[0], None)
+        except exceptions.RequestException:
             try:
                 #incriment error
                 problem_apps[info_app[0]][0] += 1 
@@ -48,7 +41,11 @@ def try_deploy_problem_apps():
             value[0] = 0
             url =  url_back + '/' + key + '/stop'
             payload = {'server_key': get_server_key()}
-            response = get(url, params=payload)
+            try:
+            	response = get(url, params=payload)
+            except exceptions.RequestException:
+                #send push to admin
+                pass
             problem_apps.pop(key, None)
             #send push to client
         if value[0] == error_counter:
